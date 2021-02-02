@@ -1,25 +1,22 @@
 # Basic imports 
-
-import discord 
-import os
-from discord.ext import commands 
+import time
+import discord # For discord
+from discord.ext import commands # For discord
+import logging # For logging
+from pathlib import Path # For paths
 from secret  import DISCORD_TOKEN
 
-
-
-intents = discord.Intents.default()
-intents.members = True
-
-bot = commands.Bot(command_prefix='$', description="description", intents=intents)
-channel = discord.utils.get(ctx.guild.channels, name=)
-channel_id = channel.id
+# Defining a few things
+bot = commands.Bot(command_prefix='$', case_insensitive=True,owner_id=692754016186138726)
+bot.config_token = DISCORD_TOKEN
+logging.basicConfig(level=logging.INFO)
 
 @bot.event
 async def on_ready():
-    print('Logged in as')
-    print(bot.user.name)
-    print(bot.user.id)
-    print('------')
+    print(f"-----\nLogged in as: {bot.user.name} : {bot.user.id}\n-----\nMy current prefix is: -\n-----")
+    # Another way to use variables in strings
+    print("-----\nLogged in as: {} : {}\n-----\nMy current prefix is: -\n-----".format(bot.user.name, bot.user.id))
+    await bot.change_presence(activity=discord.Game(name=f"Hi, my names {bot.user.name}.\nUse $ to interact with me!")) # This changes the bots 'activity'
 
 @bot.command(name="ping")
 async def some_crazy_function_name(ctx):
@@ -56,9 +53,13 @@ async def print(ctx,*args):
     )
     panel =await ctx.channel.send(embed=embed)
     await panel.add_reaction('\U0001F44D')
+    time.sleep(5)
+    message_id = panel.id
+    message_react=panel.reactions
+    await ctx.channel.send(f"Reactions are {message_react}")
     #await panel.add_reaction('\U0001F44E')
 
-bot.run(DISCORD_TOKEN)
+bot.run(bot.config_token )
 """
      def check(reaction, user):
             return str(reaction.emoji) == '👍' and user != bot.user
